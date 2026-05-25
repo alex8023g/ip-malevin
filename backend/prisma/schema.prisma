@@ -1,0 +1,38 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+enum Unit {
+  M
+  M2
+  M3
+  PCS
+}
+
+model WorkType {
+  id      String       @id @default(uuid())
+  name    String       @db.VarChar(255) /// вид работ
+  unit    Unit         /// единица измерений
+  records WorkRecord[]
+
+  @@map("work_types")
+}
+
+model WorkRecord {
+  id           String   @id @default(uuid())
+  date         DateTime /// дата выполнения
+  workTypeId   String
+  workType     WorkType @relation(fields: [workTypeId], references: [id])
+  volume       Decimal  @db.Decimal(10, 2) /// объём работ
+  executorName String   @db.VarChar(255) /// ФИО исполнителя
+
+  @@map("work_records")
+}
