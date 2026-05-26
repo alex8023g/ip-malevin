@@ -31,3 +31,11 @@ export async function getWorkTypes() {
     .then((data) => WorkTypesResponseSchema.parse(data))
     .catch((err) => console.error(err));
 }
+
+export async function deleteWorkRecord(id: string) {
+  const res = await fetch(`http://localhost:3001/delete-work-record?id=${id}`, {
+    method: 'DELETE',
+  });
+  if (!res.ok) throw new Error('Failed to delete work record');
+  revalidatePath('/');
+}
