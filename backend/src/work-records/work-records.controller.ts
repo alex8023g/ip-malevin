@@ -7,6 +7,11 @@ import { AddWorkRecordDto } from './dto/add-work-record.dto';
 export class WorkRecordsController {
   constructor(private readonly workRecordsService: WorkRecordsService) {}
 
+  @Get('get-work-types')
+  getWorkTypes() {
+    return this.workRecordsService.getWorkTypes();
+  }
+
   @Get('get-work-records')
   getWorkRecords() {
     return this.workRecordsService.getWorkRecords();

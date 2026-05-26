@@ -6,6 +6,10 @@ import { AddWorkRecordDto } from './dto/add-work-record.dto';
 export class WorkRecordsService {
   constructor(private readonly prisma: PrismaService) {}
 
+  getWorkTypes() {
+    return this.prisma.client.workType.findMany();
+  }
+
   getWorkRecords() {
     return this.prisma.client.workRecord.findMany({
       include: { workType: true },
