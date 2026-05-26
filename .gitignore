@@ -5,19 +5,24 @@ Thumbs.db
 # ─── Node ────────────────────────────────────────────────────────────────────
 node_modules/
 npm-debug.log*
+package-lock.json
 
 # ─── Environment ─────────────────────────────────────────────────────────────
 .env
 .env.*
 !.env.example
 
+# ─── TypeScript / Build ───────────────────────────────────────────────────────
+dist/
+build/
+*.tsbuildinfo
 
-
-# ─── Backend: generated Prisma client ────────────────────────────────────────
-backend/dist/
+# ─── Backend: generated files ────────────────────────────────────────────────
 backend/generated/
 
 # ─── Next.js ─────────────────────────────────────────────────────────────────
 frontend/.next/
 frontend/out/
 next-env.d.ts
+
+
