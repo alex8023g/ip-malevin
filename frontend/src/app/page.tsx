@@ -1,19 +1,24 @@
-import { getWorkRecords } from './serverActions';
+import { AddWorkRecordBtn } from '@/components/AddWorkRecordBtn';
+import { getWorkRecords, getWorkTypes } from './serverActions';
 
 export default async function Home() {
-  const workRecords = await getWorkRecords();
-  console.log('🚀 ~ Home ~ workRecords:', workRecords);
+  const [workRecords, workTypes] = await Promise.all([getWorkRecords(), getWorkTypes()]);
+
   return (
-    <div>
+    <div className='p-3'>
       <header>
         <h1>Тестовое задание ИП Малевин</h1>
       </header>
       <main>
+        <div className='flex justify-between'>
+          <h2>Выполненные работы</h2>
+          <AddWorkRecordBtn workTypes={workTypes ?? []} />
+        </div>
         <ul>
-          <li className='hidden md:grid md:grid-cols-[3fr_1fr_2fr_1fr] md:gap-4'>
+          <li className='hidden border md:grid md:grid-cols-[3fr_1fr_2fr_1fr] md:gap-4'>
             <span>ФИО</span>
             <span>Дата</span>
-            <span>Вид работы</span>
+            <span>Вид работ</span>
             <span>Объем</span>
           </li>
           {workRecords?.map((workRecord) => (

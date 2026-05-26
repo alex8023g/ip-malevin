@@ -17,6 +17,7 @@ export const WorkRecordSchema = z.object({
   workType: WorkTypeSchema,
 });
 
+export const WorkTypesResponseSchema = z.array(WorkTypeSchema);
 export const WorkRecordsResponseSchema = z.array(WorkRecordSchema);
 
 export type WorkType = z.infer<typeof WorkTypeSchema>;
