@@ -6,7 +6,7 @@ import { WorkRecordsResponseSchema, WorkTypesResponseSchema } from '@/lib/schema
 const BACKEND_URL = process.env.BACKEND_URL; // ?? 'http://localhost:3001';
 
 export async function getWorkRecords(sort: 'asc' | 'desc' = 'desc') {
-  return fetch(`${BACKEND_URL}/get-work-records?sort=${sort}`)
+  return fetch(`${BACKEND_URL}/api/get-work-records?sort=${sort}`)
     .then((res) => res.json())
     .then((data) => WorkRecordsResponseSchema.parse(data))
     .catch((err) => console.error(err));
@@ -18,7 +18,7 @@ export async function addWorkRecord(data: {
   workTypeId: string;
   volume: string;
 }) {
-  const res = await fetch(`${BACKEND_URL}/add-work-record`, {
+  const res = await fetch(`${BACKEND_URL}/api/add-work-record`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
@@ -28,14 +28,14 @@ export async function addWorkRecord(data: {
 }
 
 export async function getWorkTypes() {
-  return fetch(`${BACKEND_URL}/get-work-types`)
+  return fetch(`${BACKEND_URL}/api/get-work-types`)
     .then((res) => res.json())
     .then((data) => WorkTypesResponseSchema.parse(data))
     .catch((err) => console.error(err));
 }
 
 export async function deleteWorkRecord(id: string) {
-  const res = await fetch(`${BACKEND_URL}/delete-work-record?id=${id}`, {
+  const res = await fetch(`${BACKEND_URL}/api/delete-work-record?id=${id}`, {
     method: 'DELETE',
   });
   if (!res.ok) throw new Error('Failed to delete work record');
