@@ -1,9 +1,20 @@
+import { Suspense } from 'react';
+
 import { AddWorkRecordBtn } from '@/components/AddWorkRecordBtn';
+import { SortByDateBtn } from '@/components/SortByDateBtn';
 import { WorkRecordMenu } from '@/components/WorkRecordMenu';
 import { getWorkRecords, getWorkTypes } from './serverActions';
 
-export default async function Home() {
-  const [workRecords, workTypes] = await Promise.all([getWorkRecords(), getWorkTypes()]);
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{ sort?: string }>;
+}) {
+  const { sort = 'desc' } = await searchParams;
+  const [workRecords, workTypes] = await Promise.all([
+    getWorkRecords(sort as 'asc' | 'desc'),
+    getWorkTypes(),
+  ]);
 
   return (
     <div className='p-3'>
@@ -18,7 +29,9 @@ export default async function Home() {
         <ul>
           <li className='hidden border md:grid md:grid-cols-[3fr_1fr_2fr_1fr_2rem] md:gap-4'>
             <span>ФИО</span>
-            <span>Дата</span>
+            <Suspense fallback={<span>Дата</span>}>
+              <SortByDateBtn />
+            </Suspense>
             <span>Вид работ</span>
             <span>Объем</span>
             <span />

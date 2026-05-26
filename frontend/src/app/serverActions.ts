@@ -3,8 +3,8 @@
 import { revalidatePath } from 'next/cache';
 import { WorkRecordsResponseSchema, WorkTypesResponseSchema } from '@/lib/schemas';
 
-export async function getWorkRecords() {
-  return fetch('http://localhost:3001/get-work-records')
+export async function getWorkRecords(sort: 'asc' | 'desc' = 'desc') {
+  return fetch(`http://localhost:3001/get-work-records?sort=${sort}`)
     .then((res) => res.json())
     .then((data) => WorkRecordsResponseSchema.parse(data))
     .catch((err) => console.error(err));
