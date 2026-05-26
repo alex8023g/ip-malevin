@@ -2,6 +2,7 @@
 
 import { DropdownMenu } from 'radix-ui';
 import { MoreHorizontal, MoreVertical } from 'lucide-react';
+import { toast } from 'sonner';
 
 import { deleteWorkRecord } from '@/app/serverActions';
 import { Button } from '@/components/ui/button';
@@ -32,7 +33,10 @@ export function WorkRecordMenu({ recordId }: WorkRecordMenuProps) {
         >
           <DropdownMenu.Item
             className='flex cursor-pointer select-none items-center rounded-md px-2 py-1.5 text-sm text-destructive outline-none hover:bg-muted focus:bg-muted'
-            onSelect={() => deleteWorkRecord(recordId)}
+            onSelect={async () => {
+              const res = await deleteWorkRecord(recordId);
+              if (res?.error) toast.error(res.error);
+            }}
           >
             Удалить
           </DropdownMenu.Item>

@@ -3,6 +3,8 @@
 import * as React from 'react';
 import * as z from 'zod';
 
+import { toast } from 'sonner';
+
 import { addWorkRecord } from '@/app/serverActions';
 import { WorkType } from '@/lib/schemas';
 import { Button } from '@/components/ui/button';
@@ -51,12 +53,13 @@ export function AddWorkRecordForm({ workTypes, onClose }: AddWorkRecordFormProps
       return;
     }
     setPending(true);
-    try {
-      await addWorkRecord(result.data);
-      onClose();
-    } finally {
-      setPending(false);
+    const res = await addWorkRecord(result.data);
+    setPending(false);
+    if (res?.error) {
+      toast.error(res.error);
+      return;
     }
+    onClose();
   }
 
   return (
