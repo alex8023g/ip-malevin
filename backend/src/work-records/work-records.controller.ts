@@ -1,4 +1,11 @@
-import { Body, Controller, Delete, Get, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  DefaultValuePipe,
+  Delete,
+  Get,
+  Query,
+} from '@nestjs/common';
 import { Post } from '@nestjs/common';
 import { WorkRecordsService } from './work-records.service';
 import { AddWorkRecordDto } from './dto/add-work-record.dto';
@@ -13,8 +20,10 @@ export class WorkRecordsController {
   }
 
   @Get('get-work-records')
-  getWorkRecords() {
-    return this.workRecordsService.getWorkRecords();
+  getWorkRecords(
+    @Query('sort', new DefaultValuePipe('desc')) sort: 'asc' | 'desc',
+  ) {
+    return this.workRecordsService.getWorkRecords(sort);
   }
 
   @Post('add-work-record')

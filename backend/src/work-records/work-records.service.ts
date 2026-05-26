@@ -10,10 +10,10 @@ export class WorkRecordsService {
     return this.prisma.client.workType.findMany();
   }
 
-  getWorkRecords() {
+  getWorkRecords(sort: 'asc' | 'desc' = 'desc') {
     return this.prisma.client.workRecord.findMany({
       include: { workType: true },
-      orderBy: { date: 'desc' },
+      orderBy: { date: sort },
     });
   }
 
