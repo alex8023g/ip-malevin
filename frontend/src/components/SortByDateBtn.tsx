@@ -24,7 +24,7 @@ export function SortByDateBtn() {
       variant='ghost'
       size='sm'
       onClick={handleClick}
-      className='-ml-2.5 gap-1 px-2.5'
+      className='-ml-2.5 gap-1 px-2.5 justify-start text-md font-semibold'
     >
       Дата
       <ArrowDownUp size={14} />
