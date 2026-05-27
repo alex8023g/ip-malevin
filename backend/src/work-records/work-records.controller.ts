@@ -4,11 +4,13 @@ import {
   DefaultValuePipe,
   Delete,
   Get,
+  Patch,
+  Post,
   Query,
 } from '@nestjs/common';
-import { Post } from '@nestjs/common';
 import { WorkRecordsService } from './work-records.service';
 import { AddWorkRecordDto } from './dto/add-work-record.dto';
+import { UpdateWorkRecordDto } from './dto/update-work-record.dto';
 
 @Controller()
 export class WorkRecordsController {
@@ -29,6 +31,11 @@ export class WorkRecordsController {
   @Post('add-work-record')
   addWorkRecord(@Body() dto: AddWorkRecordDto) {
     return this.workRecordsService.addWorkRecord(dto);
+  }
+
+  @Patch('update-work-record')
+  updateWorkRecord(@Query('id') id: string, @Body() dto: UpdateWorkRecordDto) {
+    return this.workRecordsService.updateWorkRecord(id, dto);
   }
 
   @Delete('delete-work-record')

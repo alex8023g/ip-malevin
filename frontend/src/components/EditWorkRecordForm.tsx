@@ -2,11 +2,10 @@
 
 import * as React from 'react';
 import * as z from 'zod';
-
 import { toast } from 'sonner';
 
-import { addWorkRecord } from '@/app/serverActions';
-import { WorkType } from '@/lib/schemas';
+import { updateWorkRecord } from '@/app/serverActions';
+import { WorkRecord, WorkType } from '@/lib/schemas';
 import { Button } from '@/components/ui/button';
 
 const formSchema = z.object({
@@ -19,17 +18,18 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 type FormErrors = Partial<Record<keyof FormData, string>>;
 
-interface AddWorkRecordFormProps {
+interface EditWorkRecordFormProps {
+  record: WorkRecord;
   workTypes: WorkType[];
   onClose: () => void;
 }
 
-export function AddWorkRecordForm({ workTypes, onClose }: AddWorkRecordFormProps) {
+export function EditWorkRecordForm({ record, workTypes, onClose }: EditWorkRecordFormProps) {
   const [formData, setFormData] = React.useState<FormData>({
-    executorName: '',
-    date: '',
-    workTypeId: '',
-    volume: '',
+    executorName: record.executorName,
+    date: record.date.toISOString().split('T')[0],
+    workTypeId: record.workTypeId,
+    volume: record.volume,
   });
   const [errors, setErrors] = React.useState<FormErrors>({});
   const [pending, setPending] = React.useState(false);
@@ -53,7 +53,7 @@ export function AddWorkRecordForm({ workTypes, onClose }: AddWorkRecordFormProps
       return;
     }
     setPending(true);
-    const res = await addWorkRecord(result.data);
+    const res = await updateWorkRecord(record.id, result.data);
     setPending(false);
     if (res?.error) {
       toast.error(res.error);

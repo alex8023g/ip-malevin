@@ -1,5 +1,3 @@
-import { Suspense } from 'react';
-
 import { AddWorkRecordBtn } from '@/components/AddWorkRecordBtn';
 import { SortByDateBtn } from '@/components/SortByDateBtn';
 import { WorkRecordMenu } from '@/components/WorkRecordMenu';
@@ -27,7 +25,7 @@ export default async function Home({
           <span className='md:hidden'>
             <SortByDateBtn />
           </span>
-          <AddWorkRecordBtn workTypes={workTypes ?? []} />
+          {workTypes.ok && <AddWorkRecordBtn workTypes={workTypes.data ?? []} />}
         </div>
         <ul>
           <li className='hidden border pl-3 py-2  md:grid md:grid-cols-[3fr_1fr_2fr_1fr_2rem] md:gap-4 items-center font-semibold'>
@@ -37,42 +35,46 @@ export default async function Home({
             <span>Объем</span>
             <span />
           </li>
-          {workRecords?.map((workRecord) => (
-            <li
-              key={workRecord.id}
-              className='flex border mb-2 rounded-lg pl-3 py-2 md:rounded-none md:mb-0 md:grid md:grid-cols-[3fr_1fr_2fr_1fr_2rem] md:gap-4'
-            >
-              <div className='flex flex-1 flex-col md:contents'>
-                <div className='md:flex items-center'>
-                  <span className='md:hidden'>ФИО: </span>
-                  <span>{workRecord.executorName}</span>
+          {workRecords.ok ? (
+            workRecords.data?.map((workRecord) => (
+              <li
+                key={workRecord.id}
+                className='flex border mb-2 rounded-lg pl-3 py-2 md:rounded-none md:mb-0 md:grid md:grid-cols-[3fr_1fr_2fr_1fr_2rem] md:gap-4'
+              >
+                <div className='flex flex-1 flex-col md:contents'>
+                  <div className='md:flex items-center'>
+                    <span className='md:hidden'>ФИО: </span>
+                    <span>{workRecord.executorName}</span>
+                  </div>
+                  <div className='md:flex items-center'>
+                    <span className='md:hidden'>Дата: </span>
+                    <span>
+                      {workRecord.date.toLocaleDateString('ru-RU', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                      })}
+                    </span>
+                  </div>
+                  <div className='md:flex items-center'>
+                    <span className='md:hidden'>Вид работы: </span>
+                    <span>{workRecord.workType.name}</span>
+                  </div>
+                  <div className='md:flex items-center'>
+                    <span className='md:hidden'>Объём: </span>
+                    <span>
+                      {workRecord.volume} {workRecord.workType.unit}
+                    </span>
+                  </div>
                 </div>
-                <div className='md:flex items-center'>
-                  <span className='md:hidden'>Дата: </span>
-                  <span>
-                    {workRecord.date.toLocaleDateString('ru-RU', {
-                      day: '2-digit',
-                      month: '2-digit',
-                      year: 'numeric',
-                    })}
-                  </span>
+                <div>
+                  <WorkRecordMenu record={workRecord} workTypes={workTypes.data ?? []} />
                 </div>
-                <div className='md:flex items-center'>
-                  <span className='md:hidden'>Вид работы: </span>
-                  <span>{workRecord.workType.name}</span>
-                </div>
-                <div className='md:flex items-center'>
-                  <span className='md:hidden'>Объём: </span>
-                  <span>
-                    {workRecord.volume} {workRecord.workType.unit}
-                  </span>
-                </div>
-              </div>
-              <div>
-                <WorkRecordMenu recordId={workRecord.id} />
-              </div>
-            </li>
-          ))}
+              </li>
+            ))
+          ) : (
+            <div>Сервис временно недоступен, попробуйте повторить попытку позже</div>
+          )}
         </ul>
       </main>
     </div>
