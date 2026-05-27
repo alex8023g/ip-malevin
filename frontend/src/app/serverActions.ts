@@ -48,6 +48,23 @@ export async function getWorkTypes() {
   }
 }
 
+export async function updateWorkRecord(
+  id: string,
+  data: { executorName?: string; date?: string; workTypeId?: string; volume?: string },
+): Promise<{ error: string } | void> {
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/update-work-record?id=${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) return { error: 'Не удалось обновить запись. Попробуйте позже.' };
+    revalidatePath('/');
+  } catch {
+    return { error: 'Не удалось обновить запись. Попробуйте позже.' };
+  }
+}
+
 export async function deleteWorkRecord(id: string) {
   try {
     const res = await fetch(`${BACKEND_URL}/api/delete-work-record?id=${id}`, {

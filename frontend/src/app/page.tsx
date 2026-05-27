@@ -68,7 +68,7 @@ export default async function Home({
                   </div>
                 </div>
                 <div>
-                  <WorkRecordMenu recordId={workRecord.id} />
+                  <WorkRecordMenu record={workRecord} workTypes={workTypes.data ?? []} />
                 </div>
               </li>
             ))
