@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AddWorkRecordDto } from './dto/add-work-record.dto';
+import { UpdateWorkRecordDto } from './dto/update-work-record.dto';
 
 @Injectable()
 export class WorkRecordsService {
@@ -24,6 +25,19 @@ export class WorkRecordsService {
         workTypeId: dto.workTypeId,
         volume: dto.volume,
         executorName: dto.executorName,
+      },
+      include: { workType: true },
+    });
+  }
+
+  updateWorkRecord(id: string, dto: UpdateWorkRecordDto) {
+    return this.prisma.client.workRecord.update({
+      where: { id },
+      data: {
+        ...(dto.date && { date: new Date(dto.date) }),
+        ...(dto.workTypeId && { workTypeId: dto.workTypeId }),
+        ...(dto.volume !== undefined && { volume: dto.volume }),
+        ...(dto.executorName && { executorName: dto.executorName }),
       },
       include: { workType: true },
     });

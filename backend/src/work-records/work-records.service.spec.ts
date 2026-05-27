@@ -21,6 +21,7 @@ const prismaMock = {
     workRecord: {
       findMany: jest.fn(),
       create: jest.fn(),
+      update: jest.fn(),
       delete: jest.fn(),
     },
   },
@@ -100,6 +101,48 @@ describe('WorkRecordsService', () => {
         include: { workType: true },
       });
       expect(result).toEqual(mockRecord);
+    });
+  });
+
+  describe('updateWorkRecord', () => {
+    it('updates only the provided fields', async () => {
+      const updated = { ...mockRecord, executorName: 'Петров П.П.' };
+      prismaMock.client.workRecord.update.mockResolvedValue(updated);
+
+      const result = await service.updateWorkRecord('rec-1', {
+        executorName: 'Петров П.П.',
+      });
+
+      expect(prismaMock.client.workRecord.update).toHaveBeenCalledWith({
+        where: { id: 'rec-1' },
+        data: { executorName: 'Петров П.П.' },
+        include: { workType: true },
+      });
+      expect(result).toEqual(updated);
+    });
+
+    it('converts date string to Date object', async () => {
+      prismaMock.client.workRecord.update.mockResolvedValue(mockRecord);
+
+      await service.updateWorkRecord('rec-1', { date: '2025-01-15' });
+
+      expect(prismaMock.client.workRecord.update).toHaveBeenCalledWith({
+        where: { id: 'rec-1' },
+        data: { date: new Date('2025-01-15') },
+        include: { workType: true },
+      });
+    });
+
+    it('includes volume when explicitly set to 0', async () => {
+      prismaMock.client.workRecord.update.mockResolvedValue(mockRecord);
+
+      await service.updateWorkRecord('rec-1', { volume: 0 });
+
+      expect(prismaMock.client.workRecord.update).toHaveBeenCalledWith({
+        where: { id: 'rec-1' },
+        data: { volume: 0 },
+        include: { workType: true },
+      });
     });
   });
 

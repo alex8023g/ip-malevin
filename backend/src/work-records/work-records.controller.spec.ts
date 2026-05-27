@@ -17,6 +17,7 @@ const serviceMock = {
   getWorkTypes: jest.fn(),
   getWorkRecords: jest.fn(),
   addWorkRecord: jest.fn(),
+  updateWorkRecord: jest.fn(),
   deleteWorkRecord: jest.fn(),
 };
 
@@ -78,6 +79,19 @@ describe('WorkRecordsController', () => {
 
       expect(serviceMock.addWorkRecord).toHaveBeenCalledWith(dto);
       expect(result).toEqual(mockRecord);
+    });
+  });
+
+  describe('updateWorkRecord', () => {
+    it('passes id and dto to service and returns updated record', async () => {
+      const updated = { ...mockRecord, executorName: 'Петров П.П.' };
+      serviceMock.updateWorkRecord.mockResolvedValue(updated);
+
+      const dto = { executorName: 'Петров П.П.' };
+      const result = await controller.updateWorkRecord('rec-1', dto);
+
+      expect(serviceMock.updateWorkRecord).toHaveBeenCalledWith('rec-1', dto);
+      expect(result).toEqual(updated);
     });
   });
 
